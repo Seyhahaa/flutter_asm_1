@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pro_1/instagram_screen.dart';
+import 'package:flutter_pro_1/main_screen.dart';
 
 class LoginScreen extends StatefulWidget{
   @override
@@ -65,10 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 if(_emailCtrl.text.trim() == 'admin' && 
                 _passwordCtrl.text.trim() == 'admin'){
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(builder:(context) => InstagramPage(),
-                    )
-                  );
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

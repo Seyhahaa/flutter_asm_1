@@ -1,24 +1,38 @@
 // instagram_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_pro_1/language_data.dart';
+import 'package:flutter_pro_1/language_logic.dart';
+import 'package:provider/provider.dart';
 
-class InstagramPage extends StatelessWidget {
+class InstagramPage extends StatefulWidget {
+  @override
+  State<InstagramPage> createState() => _InstagramPageState();
+}
+
+class _InstagramPageState extends State<InstagramPage> {
+
+  Language _lang = Language();
   @override
   Widget build(BuildContext context) {
+    _lang = context.watch<LanguageLogic>().language;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Row(
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+    );
+  }
+  AppBar _buildAppBar(){
+    return AppBar(
+        title: Row(
           children: [
-            Text('Instagram', style: TextStyle(color: Colors.black,fontFamily: 'Instagram',fontSize: 28,)),
-            Icon(Icons.keyboard_arrow_down, color: Colors.black),
+            Text(_lang.appName, style: TextStyle(fontFamily: 'Instagram',fontSize: 28,)),
+            Icon(Icons.keyboard_arrow_down),
           ],
         ),
         actions: [
           IconButton(
             icon: Stack( 
               children: [
-                const Icon(Icons.favorite_border, color: Colors.black, size: 28),
+                const Icon(Icons.favorite_border, size: 28),
                 Positioned(right: 1,top: 4,
                   child: Container(height: 6,width: 6,
                     padding: const EdgeInsets.all(2),
@@ -34,71 +48,49 @@ class InstagramPage extends StatelessWidget {
             onPressed: () {},
           ),
           IconButton(
-            icon:const Icon(Icons.messenger_outline, color: Colors.black, size: 28),
-            onPressed: () {},
+            icon:const Icon(Icons.language, size: 28),
+            onPressed: () {
+              context.read<LanguageLogic>().changeToKh();
+            },
           ),
         ],
-      ),
+      );
+  }
 
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Stories
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildStoryItem('ninaslstrh', 'assets/profile1.jpg'),
-                  _buildStoryItem('ch_._sreynudt', 'assets/profile2.jpg'),
-                  _buildStoryItem('hornsokunthea', 'assets/profile3.jpg'),
-                  _buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
-                  _buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
 
-                ],
-              ),
+ Widget _buildBody(){
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Column(
+        children: [
+          // Stories
+          SizedBox(
+            height: 120,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                buildStoryItem('ninaslstrh', 'assets/profile1.jpg'),
+                buildStoryItem('ch_._sreynudt', 'assets/profile2.jpg'),
+                buildStoryItem('hornsokunthea', 'assets/profile3.jpg'),
+                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
+                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
+                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
+
+
+              ],
             ),
-            // Post
-            _buildPost(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: const[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.black),
-            label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search, color: Colors.black),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_outlined, color: Colors.black),
-            label: 'Add',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.video_library_outlined, color: Colors.black),
-            label: 'Reels',
-          ),
-          BottomNavigationBarItem(
-            icon: CircleAvatar(
-              radius: 12,
-              backgroundImage: AssetImage('assets/profile.jpg'),
-            ),
-            label: 'Profile',
-          ),
+          // Post
+          _buildPost(),
         ],
       ),
     );
   }
 
-  Widget _buildStoryItem(String username, String imagePath) {
+
+  Widget buildStoryItem(String username, String imagePath) {
     return Container(
-      width: 80,
+      width: 100,
       margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         children: [
@@ -119,7 +111,7 @@ class InstagramPage extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(
-                radius: 30,
+                radius: 35,
                 backgroundImage: AssetImage(imagePath),
               ),
             ),
@@ -137,10 +129,21 @@ class InstagramPage extends StatelessWidget {
 
   Widget _buildPost() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Post header
-       const ListTile(
+        _buildPostItem(),
+        _buildPostItem(),
+        _buildPostItem(),
+        
+
+      ],
+    );
+  }
+
+  Widget _buildPostItem(){
+    return Column( 
+       crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+         ListTile(
           leading: CircleAvatar(
             backgroundImage: AssetImage('assets/profile.jpg'),
           ),
@@ -155,7 +158,7 @@ class InstagramPage extends StatelessWidget {
               ),
             ],
           ),
-          subtitle: Text('Chaktomuk Conference Hall'),
+          subtitle: Text(_lang.address),
           trailing: Icon(Icons.more_vert),
         ),
         // Post image
@@ -192,10 +195,10 @@ class InstagramPage extends StatelessWidget {
           ],
         ),
         // Likes
-        const Padding(
+         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            '24 likes',
+            '24 ${_lang.like}',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -203,8 +206,8 @@ class InstagramPage extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: RichText(
-            text: const TextSpan(
-              style: TextStyle(color: Colors.black),
+            text: TextSpan(
+              style: TextStyle(),
               children: [
                 TextSpan(
                   text: 'ery_blp ',
@@ -214,8 +217,7 @@ class InstagramPage extends StatelessWidget {
                   text: 'Celebrating 65th Anniversary of Cambodia and Indonesia diplomatic...',
                 ),
                 TextSpan(
-                  text: ' more',
-                  style: TextStyle(color: Colors.grey),
+                  text: ' ${_lang.more}',
                 ),
               ],
             ),
@@ -227,7 +229,6 @@ class InstagramPage extends StatelessWidget {
           child: Text(
             '4 days ago',
             style: TextStyle(
-              color: Colors.grey,
               fontSize: 12,
             ),
           ),
@@ -235,4 +236,5 @@ class InstagramPage extends StatelessWidget {
       ],
     );
   }
+  
 }
