@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pro_1/image_data.dart';
+import 'package:flutter_pro_1/detail_screen.dart';
+import 'package:flutter_pro_1/post_model.dart';
 import 'package:flutter_pro_1/instagram_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -173,15 +175,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildPostItem(String url) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(url),
-          fit: BoxFit.cover,
+  Widget _buildPostItem(PostModel post) {
+    return _navigateToDetailScreen(
+      post,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(post.postImage),
+            fit: BoxFit.cover,
+          ),
         ),
+        
       ),
     );
   }
-  
+  Widget _navigateToDetailScreen(PostModel url,{Widget? child}){
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(url)));
+      },
+      child: child,
+    );
+  }
 }
