@@ -5,6 +5,8 @@ import 'package:flutter_pro_1/language_logic.dart';
 import 'package:provider/provider.dart';
 
 class InstagramPage extends StatefulWidget {
+  const InstagramPage({super.key});
+
   @override
   State<InstagramPage> createState() => _InstagramPageState();
 }
@@ -12,6 +14,7 @@ class InstagramPage extends StatefulWidget {
 class _InstagramPageState extends State<InstagramPage> {
 
   Language _lang = Language();
+  bool language = true;
   @override
   Widget build(BuildContext context) {
     _lang = context.watch<LanguageLogic>().language;
@@ -50,7 +53,13 @@ class _InstagramPageState extends State<InstagramPage> {
           IconButton(
             icon:const Icon(Icons.language, size: 28),
             onPressed: () {
+              if(language) { 
               context.read<LanguageLogic>().changeToKh();
+              language = false;
+              }
+              else {
+                context.read<LanguageLogic>().changeLanguage();
+              }
             },
           ),
         ],
@@ -69,12 +78,10 @@ class _InstagramPageState extends State<InstagramPage> {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                buildStoryItem('ninaslstrh', 'assets/profile1.jpg'),
-                buildStoryItem('ch_._sreynudt', 'assets/profile2.jpg'),
-                buildStoryItem('hornsokunthea', 'assets/profile3.jpg'),
-                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
-                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
-                buildStoryItem('yogiwidiawati', 'assets/profile4.jpg'),
+                buildStoryItem('ninaslstrh', 'https://images.pexels.com/photos/19546262/pexels-photo-19546262/free-photo-of-smiling-young-woman-using-laptop-sitting-on-sofa.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+                buildStoryItem('ch_._sreynudt', 'https://images.pexels.com/photos/9040296/pexels-photo-9040296.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+                buildStoryItem('hornsokunthea', 'https://images.pexels.com/photos/4467687/pexels-photo-4467687.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
+                buildStoryItem('yogiwidiawati', 'https://images.pexels.com/photos/26692093/pexels-photo-26692093/free-photo-of-woman-in-white-suit-jacket-sitting-in-office.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
 
 
               ],
@@ -112,7 +119,7 @@ class _InstagramPageState extends State<InstagramPage> {
               ),
               child: CircleAvatar(
                 radius: 35,
-                backgroundImage: AssetImage(imagePath),
+                backgroundImage: NetworkImage(imagePath),
               ),
             ),
           ),
@@ -145,7 +152,7 @@ class _InstagramPageState extends State<InstagramPage> {
       children: [
          ListTile(
           leading: CircleAvatar(
-            backgroundImage: AssetImage('assets/profile.jpg'),
+            backgroundImage: NetworkImage('https://images.pexels.com/photos/11381964/pexels-photo-11381964.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
           ),
           title: Row(
             children: [
@@ -167,7 +174,7 @@ class _InstagramPageState extends State<InstagramPage> {
           width: double.infinity,
           decoration:const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/post.jpg'),
+              image: NetworkImage('https://images.pexels.com/photos/30286786/pexels-photo-30286786/free-photo-of-colorful-kite-in-bali-s-clear-summer-sky.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'),
               fit: BoxFit.cover,
             ),
           ),

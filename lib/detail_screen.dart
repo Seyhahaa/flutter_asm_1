@@ -8,7 +8,7 @@ class DetailScreen extends StatefulWidget {
   //const DetailScreen({super.key});
 
   PostModel post;
-  DetailScreen(this.post);
+  DetailScreen(this.post, {super.key});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -39,6 +39,8 @@ class _DetailScreenState extends State<DetailScreen> {
       body: _buildPost(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
           items: const[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_filled, size: 35),

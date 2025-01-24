@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pro_1/main_screen.dart';
 
 class LoginScreen extends StatefulWidget{
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }

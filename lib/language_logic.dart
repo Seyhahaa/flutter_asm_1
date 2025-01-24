@@ -5,7 +5,7 @@ class LanguageLogic extends ChangeNotifier{
   Language _language = Language();
   Language get language => _language;
 
-  void changeLanguage(Language language){
+  void changeLanguage(){
     _language = language;
     notifyListeners();
   }

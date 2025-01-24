@@ -1,17 +1,47 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pro_1/detail_screen.dart';
 import 'package:flutter_pro_1/post_model.dart';
-import 'package:flutter_pro_1/instagram_screen.dart';
+import 'package:flutter_pro_1/reels_data.dart';
+import 'package:flutter_pro_1/reels_detail.dart';
+import 'package:video_player/video_player.dart';
+
+enum changeWidget {
+  grid,
+  reels,
+  tagged,
+}
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.videoUrl});
+  final String videoUrl;
+  
+  
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  late VideoPlayerController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: _buildBody(),
     );
   }
-
+changeWidget selectedWidget = changeWidget.grid;
+bool isSelected = true;
   Widget _buildBody() {
     return Container(
       child: Column(
@@ -150,28 +181,125 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Icon(Icons.grid_on, size: 30,),
-              Icon(Icons.view_sidebar_outlined, size: 30),
-              Icon(Icons.person_pin_outlined, size: 30),
+              
+              IconButton(onPressed: (){
+                setState(() {
+                  selectedWidget = changeWidget.grid;
+                });
+              }, 
+                icon: Icon(Icons.grid_on, size: 30),
+              
+                
+              ),
+              IconButton(onPressed: (){
+                setState(() {
+                  selectedWidget = changeWidget.reels;
+                });
+              },
+                icon: Icon(Icons.view_sidebar_outlined, size: 30)
+              ),
+              IconButton(onPressed: (){
+                setState(() {
+                  selectedWidget = changeWidget.tagged;
+                });
+              },
+                icon:Icon(Icons.person_pin_outlined, size: 30)
+              ),
             ],
           ),
         ),
-        GridView.builder(
-          shrinkWrap: true,
-          itemCount: imageList.length,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2,
-          ),
-          itemBuilder: (context, index) {
-            return _buildPostItem(imageList[index]);
-          },
+        Container(
+          child: _buildChangeBodyProfile()
         ),
       
       ]
       ),
+    );
+  }
+
+  Widget _buildChangeBodyProfile(){
+    switch (selectedWidget) {
+      case changeWidget.grid:
+        return _buildGridItem();
+      case changeWidget.reels:
+        return _buildReelsItem();
+      case changeWidget.tagged:
+        return _buildTaggedItem();
+    }
+  }
+  Widget _buildReelsItem(){
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: reels.length,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemBuilder: (context, index) {
+        return _buildReelsItems(reels[index]);
+      },
+    );
+  }
+
+  
+  Widget _buildReelsItems(String url){
+    return _navigateToDetailReel(AutofillHints.url);
+    
+  }
+  Widget _navigateToDetailReel(String url,{Widget? child}){
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ReelsDetailScreen()));
+      },
+      child: child,
+    );
+  }
+  Widget _buildTaggedItem(){
+    return Center(
+      child: Column(
+        children: [
+          Container(
+          height: 150,
+          width: 150,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: Center(
+            child: Icon(Icons.person_pin_outlined,size: 100, weight: 16,),
+          ),
+          
+        ),
+        SizedBox(height: 20),
+        Container( 
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Text('Photos and Videos of you', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              Text('When you are tagged in photos, they will appear here.', style: TextStyle(fontSize: 20), textAlign: TextAlign.center,),
+            ],
+          )
+        )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridItem(){
+    return GridView.builder(
+      shrinkWrap: true,
+      itemCount: imageList.length,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemBuilder: (context, index) {
+        return _buildPostItem(imageList[index]);
+      },
     );
   }
 
@@ -195,6 +323,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(url)));
       },
       child: child,
+    );
+  }
+}
+
+
+class ReelItem extends StatefulWidget {
+  final  imageUrl;
+  final  videoUrl;
+
+  ReelItem({
+    required this.imageUrl,
+    required this.videoUrl,
+  });
+
+  @override
+  _ReelItemState createState() => _ReelItemState();
+}
+
+class _ReelItemState extends State<ReelItem> {
+  late VideoPlayerController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.networkUrl(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+      });
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _videoController.value.isInitialized
+            ? AspectRatio(
+                aspectRatio: _videoController.value.aspectRatio,
+                child: VideoPlayer(_videoController),
+              )
+            : Image.network(widget.imageUrl),
+        // Add interactive elements like buttons, profile info, etc.
+      ],
     );
   }
 }

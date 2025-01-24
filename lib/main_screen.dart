@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pro_1/instagram_screen.dart';
 import 'package:flutter_pro_1/login_screen.dart';
 import 'package:flutter_pro_1/profile_screen.dart';
+import 'package:flutter_pro_1/reels_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,8 +27,8 @@ Widget _buildBody(){
       InstagramPage(),
       LoginScreen(),
       Container(color: Colors.red,),
-      Container(color: Colors.red,),
-      ProfileScreen(),
+      ReelScreen(),
+      ProfileScreen(videoUrl: "https://videos.pexels.com/video-files/5824033/5824033-uhd_1440_2560_24fps.mp4", ),
     ],
   );
 }
