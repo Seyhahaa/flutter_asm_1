@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pro_1/instagram_screen.dart';
-import 'package:flutter_pro_1/login_screen.dart';
 import 'package:flutter_pro_1/profile_screen.dart';
 import 'package:flutter_pro_1/reels_screen.dart';
 import 'package:flutter_pro_1/search_screen.dart';
@@ -28,7 +27,7 @@ Widget _buildBody(){
       InstagramPage(),
       InstagramSearchScreen(),
       Container(color: Colors.red,),
-      ReelScreen(),
+      ReelsScreen(),
       ProfileScreen(videoUrl: "https://videos.pexels.com/video-files/5824033/5824033-uhd_1440_2560_24fps.mp4", ),
     ],
   );
